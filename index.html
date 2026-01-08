@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Game English HOTS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#1abc9c,#3498db);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#333;
+}
+.container{
+    background:white;
+    width:90%;
+    max-width:900px;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* ===== TAMBAHAN GAMBAR ===== */
+.quiz-image{
+    text-align:center;
+    margin-bottom:15px;
+}
+.quiz-image img{
+    max-width:220px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+/* ========================== */
+
+h1{
+    text-align:center;
+    color:#2c3e50;
+}
+.chapter{
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+.question{
+    font-size:22px;
+    margin:20px 0;
+}
+.options button{
+    display:block;
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#ecf0f1;
+    transition:0.3s;
+}
+.options button:hover{
+    background:#dfe6e9;
+}
+.options button.correct{
+    background:#2ecc71;
+    color:white;
+}
+.options button.wrong{
+    background:#e74c3c;
+    color:white;
+}
+.navigation{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+.navigation button{
+    padding:12px 20px;
+    font-size:16px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#3498db;
+    color:white;
+}
+.navigation button:hover{
+    background:#2980b9;
+}
+.score{
+    text-align:center;
+    font-size:24px;
+    margin-top:20px;
+}
+
+/* ===== TAMBAHAN KUNCI JAWABAN ===== */
+.answer-key{
+    margin-top:25px;
+    background:#f4f6f8;
+    padding:20px;
+    border-radius:12px;
+}
+.answer-key h3{
+    text-align:center;
+    color:#2c3e50;
+}
+.answer-key ol{
+    padding-left:20px;
+}
+.answer-key li{
+    margin:6px 0;
+}
+/* =============================== */
+
+.restart{
+    text-align:center;
+    margin-top:20px;
+}
+.restart button{
+    padding:15px 30px;
+    font-size:18px;
+    background:#27ae60;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+.restart button:hover{
+    background:#1e8449;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<!-- ===== GAMBAR DI ATAS TENGAH ===== -->
+<div class="quiz-image">
+    <img src="NBL.jpeg" alt="English Quiz">
+</div>
+<!-- ================================ -->
+
+<h1>🎮 English Quiz Game (HOTS)</h1>
+<div class="chapter" id="chapter"></div>
+<div class="question" id="question"></div>
+
+<div class="options" id="options"></div>
+
+<div class="navigation">
+<button onclick="prevQuestion()">⬅ Previous</button>
+<button onclick="nextQuestion()">Next ➡</button>
+</div>
+
+<div class="score" id="score"></div>
+
+<!-- ===== TEMPAT KUNCI JAWABAN ===== -->
+<div class="answer-key" id="answerKey" style="display:none;">
+<h3>📘 Kunci Jawaban</h3>
+<ol id="answerList"></ol>
+</div>
+<!-- ================================ -->
+
+<div class="restart" id="restart" style="display:none;">
+<button onclick="restartQuiz()">🔄 Mulai Lagi</button>
+</div>
+</div>
+
+<script>
+const quiz = [
+/* ===== CHAPTER 1 ===== */
+{chapter:"Chapter 1: Descriptive Text",q:"Which sentence BEST describes a place?",o:["The place is nice.","It is a city.","The city has tall buildings and busy streets.","I go there every day."],a:2},
+{chapter:"Chapter 1: Descriptive Text",q:"What is the purpose of a descriptive text?",o:["To tell a story","To describe people, places, or things","To give instructions","To entertain with jokes"],a:1},
+{chapter:"Chapter 1: Descriptive Text",q:"Which adjective fits best: 'The mountain is very ___.'",o:["run","beautiful","quickly","eat"],a:1},
+{chapter:"Chapter 1: Descriptive Text",q:"Which sentence uses sensory details?",o:["It is a book.","The cake tastes sweet and smells good.","She reads every day.","That is my house."],a:1},
+{chapter:"Chapter 1: Descriptive Text",q:"Which sentence describes a person?",o:["The river is long.","The teacher is patient and kind.","The table is round.","The car is fast."],a:1},
+{chapter:"Chapter 1: Descriptive Text",q:"Which word describes appearance?",o:["Angry","Tall","Hungry","Sleepy"],a:1},
+{chapter:"Chapter 1: Descriptive Text",q:"Which sentence is descriptive?",o:["Open the door.","The garden is full of colorful flowers.","I am reading.","Sit down."],a:1},
+{chapter:"Chapter 1: Descriptive Text",q:"Which adjective fits: 'The room looks ___.'",o:["clean","run","eat","think"],a:0},
+{chapter:"Chapter 1: Descriptive Text",q:"Which describes an animal?",o:["The cat has soft fur.","The cat is eating.","The cat runs.","The cat sleeps."],a:0},
+{chapter:"Chapter 1: Descriptive Text",q:"Which is NOT descriptive?",o:["Big","Beautiful","Quickly","Small"],a:2},
+
+/* ===== CHAPTER 2 ===== */
+{chapter:"Chapter 2: Simple Present",q:"She ___ to school every day.",o:["go","goes","going","went"],a:1},
+{chapter:"Chapter 2: Simple Present",q:"Which sentence uses Simple Present?",o:["I am eating.","I eat breakfast every morning.","I ate rice.","I will eat."],a:1},
+{chapter:"Chapter 2: Simple Present",q:"We ___ football on Sunday.",o:["plays","played","play","playing"],a:2},
+{chapter:"Chapter 2: Simple Present",q:"Which is correct?",o:["He like apples.","He likes apples.","He liking apples.","He liked apples."],a:1},
+{chapter:"Chapter 2: Simple Present",q:"Simple Present is used to talk about?",o:["Past events","Habits","Future plans","Stories"],a:1},
+{chapter:"Chapter 2: Simple Present",q:"They ___ TV every night.",o:["watch","watches","watched","watching"],a:0},
+{chapter:"Chapter 2: Simple Present",q:"Which sentence is incorrect?",o:["She reads books.","He play games.","We study English.","They run fast."],a:1},
+{chapter:"Chapter 2: Simple Present",q:"My father ___ early.",o:["wake","wakes","woke","waking"],a:1},
+{chapter:"Chapter 2: Simple Present",q:"Which verb fits: 'Cats ___ milk.'",o:["drink","drinks","drank","drinking"],a:0},
+{chapter:"Chapter 2: Simple Present",q:"She ___ not like coffee.",o:["do","does","did","doing"],a:1},
+/* ===== CHAPTER 3: COMPARISON (LANJUTAN) ===== */
+{chapter:"Chapter 3: Comparison",q:"Which sentence is correct?",o:["This bag is more lighter.","This bag is lighter than mine.","This bag is lightest than mine.","This bag lighter."],a:1},
+{chapter:"Chapter 3: Comparison",q:"My brother is ___ person in my family.",o:["tall","taller","the tallest","more tall"],a:2},
+{chapter:"Chapter 3: Comparison",q:"English is ___ than Math for me.",o:["easy","easier","easiest","more easy"],a:1},
+{chapter:"Chapter 3: Comparison",q:"Which adjective needs 'more'?",o:["big","fast","beautiful","short"],a:2},
+{chapter:"Chapter 3: Comparison",q:"This road is ___ one in the city.",o:["long","longer","longest","more long"],a:2},
+
+/* ===== CHAPTER 4: READING & LOGIC (LANJUTAN) ===== */
+{chapter:"Chapter 4: Reading & Logic",q:"A story about friendship teaches us to?",o:["Fight","Care for others","Be selfish","Be angry"],a:1},
+{chapter:"Chapter 4: Reading & Logic",q:"What is the purpose of a moral value?",o:["To confuse readers","To give lessons","To entertain only","To sell books"],a:1},
+{chapter:"Chapter 4: Reading & Logic",q:"If a text explains steps, it is called?",o:["Narrative","Descriptive","Procedure","Recount"],a:2},
+{chapter:"Chapter 4: Reading & Logic",q:"Which text tells past experiences?",o:["Procedure","Recount","Description","Report"],a:1},
+{chapter:"Chapter 4: Reading & Logic",q:"Why do writers use examples?",o:["To confuse","To clarify ideas","To shorten text","To decorate pages"],a:1},
+
+/* ===== CHAPTER 5: VOCABULARY & CONTEXT ===== */
+{chapter:"Chapter 5: Vocabulary",q:"The synonym of 'happy' is?",o:["Sad","Angry","Joyful","Tired"],a:2},
+{chapter:"Chapter 5: Vocabulary",q:"The opposite of 'difficult' is?",o:["Hard","Easy","Slow","Heavy"],a:1},
+{chapter:"Chapter 5: Vocabulary",q:"Choose the correct meaning of 'crowded'.",o:["Empty","Quiet","Full of people","Clean"],a:2},
+{chapter:"Chapter 5: Vocabulary",q:"Which word relates to school?",o:["Doctor","Teacher","Farmer","Pilot"],a:1},
+{chapter:"Chapter 5: Vocabulary",q:"Which sentence uses the word 'carefully' correctly?",o:["She carefully eats.","She carefully broke the glass.","She carefully crossed the road.","She carefully angry."],a:2},
+
+/* ===== CHAPTER 6: HOTS – CRITICAL THINKING ===== */
+{chapter:"Chapter 6: HOTS",q:"Why should students do homework?",o:["To be tired","To practice learning","To avoid teachers","To waste time"],a:1},
+{chapter:"Chapter 6: HOTS",q:"What happens if we never read books?",o:["We become smarter","We gain knowledge","We lose information","We improve memory"],a:2},
+{chapter:"Chapter 6: HOTS",q:"If a rule is ignored, what may happen?",o:["Order","Discipline","Problems","Success"],a:2},
+{chapter:"Chapter 6: HOTS",q:"Why is teamwork important?",o:["To work alone","To argue","To share ideas","To be lazy"],a:2},
+{chapter:"Chapter 6: HOTS",q:"What should you do before giving an opinion?",o:["Shout","Think carefully","Ignore facts","Be angry"],a:1}
+
+
+
+
+];
+
+let index=0;
+let score=0;
+let answered=[];
+
+function loadQuestion(){
+    document.getElementById("score").innerHTML="";
+    document.getElementById("chapter").innerHTML=quiz[index].chapter;
+    document.getElementById("question").innerHTML=(index+1)+". "+quiz[index].q;
+    const opt=document.getElementById("options");
+    opt.innerHTML="";
+    quiz[index].o.forEach((choice,i)=>{
+        const btn=document.createElement("button");
+        btn.innerText=choice;
+        if(answered[index]){
+            if(i===quiz[index].a) btn.classList.add("correct");
+            if(i===answered[index] && answered[index]!==quiz[index].a) btn.classList.add("wrong");
+            btn.disabled=true;
+        }
+        btn.onclick=()=>checkAnswer(i,btn);
+        opt.appendChild(btn);
+    });
+}
+
+function checkAnswer(i,btn){
+    if(answered[index]) return;
+    answered[index]=i;
+    if(i===quiz[index].a){
+        btn.classList.add("correct");
+        score+=2.5;
+    }else{
+        btn.classList.add("wrong");
+        document.querySelectorAll(".options button")[quiz[index].a].classList.add("correct");
+    }
+}
+
+function nextQuestion(){
+    if(index<quiz.length-1){
+        index++;
+        loadQuestion();
+    }else{
+        document.getElementById("score").innerHTML="🎯 SCORE AKHIR: "+score.toFixed(0);
+        document.getElementById("restart").style.display="block";
+
+        /* ===== TAMPILKAN KUNCI JAWABAN ===== */
+        const list=document.getElementById("answerList");
+        list.innerHTML="";
+        quiz.forEach((q,i)=>{
+            const li=document.createElement("li");
+            li.innerHTML=(i+1)+". "+q.q+" <b>("+q.o[q.a]+")</b>";
+            list.appendChild(li);
+        });
+        document.getElementById("answerKey").style.display="block";
+        /* ================================ */
+    }
+}
+
+function prevQuestion(){
+    if(index>0){
+        index--;
+        loadQuestion();
+    }
+}
+
+function restartQuiz(){
+    index=0;
+    score=0;
+    answered=[];
+    document.getElementById("restart").style.display="none";
+    document.getElementById("answerKey").style.display="none";
+    loadQuestion();
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
